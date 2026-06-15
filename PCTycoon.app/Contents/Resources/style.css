@@ -1,0 +1,102 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+input, button, select, textarea { font-family: inherit; }
+body {
+    font-family: "Caveat", cursive;
+    line-height: 1.6; color: #e2e8f0; background-color: #0f172a;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(30, 41, 59, 0.7) 0px, transparent 50%), 
+        radial-gradient(at 50% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%), 
+        radial-gradient(at 100% 100%, rgba(234, 179, 8, 0.08) 0px, transparent 50%);
+    background-attachment: fixed; padding: 20px;
+}
+.version-banner { background: linear-gradient(135deg, #eab308, #ca8a04); color: #0f172a; font-size: 8pt; font-weight: 900; padding: 3px 10px; border-radius: 4px; width: fit-content; margin-bottom: 10px; }
+.version-badge-top { background: linear-gradient(135deg, #eab308, #0ea5e9); color: white; font-weight: 900; padding: 6px 14px; border-radius: 8px; font-size: 9pt; }
+.account-auth-panel { background: rgba(15, 23, 42, 0.85); border: 2px solid #eab308; box-shadow: 0 0 25px rgba(234, 179, 8, 0.2); border-radius: 12px; padding: 25px; max-width: 600px; margin: 50px auto; }
+.auth-inputs { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+.auth-inputs input { background: #0f172a; border: 1px solid #475569; color: #ffffff; padding: 10px 14px; border-radius: 6px; font-size: 10pt; width: 100%; }
+.auth-button-group { display: flex; gap: 10px; margin-top: 5px; }
+.auth-btn { padding: 10px 18px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-size: 9.5pt; }
+.auth-btn.register { background: #1e293b; border: 1px solid #475569; color: white; flex: 1; }
+.auth-btn.login { background: #eab308; color: #0f172a; flex: 1; }
+.profile-badge-btn { background: #1e293b; border: 1px solid #475569; color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 8.5pt; cursor: pointer; }
+
+.status-bar { position: sticky; top: 10px; z-index: 1000; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border: 2px solid #eab308; padding: 12px 25px; border-radius: 12px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+.status-metric { font-size: 11pt; font-weight: bold; }
+.points-display { color: #eab308; }
+
+.container { max-width: 1300px; margin: 0 auto; background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); }
+header { border-bottom: 2px solid #eab308; padding-bottom: 15px; margin-bottom: 25px; }
+h1 { color: #f8fafc; font-size: 22pt; margin-bottom: 5px; }
+h2 { color: #38bdf8; font-size: 15pt; margin-bottom: 15px; border-left: 5px solid #0ea5e9; padding-left: 12px; }
+.app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 20px; }
+@media(max-width: 1024px) { .app-grid { grid-template-columns: 1fr; } }
+.panel { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; }
+.duo-box { border: 2px solid #22c55e; }
+.progress-container { width: 100%; background: #334155; height: 8px; border-radius: 4px; overflow: hidden; margin: 12px 0; }
+.progress-bar { height: 100%; width: 0%; background: #22c55e; }
+.option-btn { display: block; width: 100%; background: #1e293b; border: 2px solid #475569; border-bottom: 4px solid #475569; border-radius: 8px; padding: 12px; color: #e2e8f0; text-align: left; cursor: pointer; margin-bottom: 10px; font-size: 10pt; }
+.option-btn.selected { border-color: #38bdf8; color: #38bdf8; }
+.option-btn.correct { border-color: #22c55e !important; color: #4ade80 !important; }
+.option-btn.incorrect { border-color: #ef4444 !important; color: #f87171 !important; }
+.action-btn { background: #22c55e; color: white; border: none; border-bottom: 4px solid #16a34a; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 9pt; }
+.action-btn:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; border:none; }
+
+.shop-box { border: 2px solid #a855f7; }
+.shop-navigation { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+.nav-tab { background: #1e293b; border: 1px solid #475569; color: #cbd5e1; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 8.5pt; white-space: nowrap; }
+.nav-tab.active { background: #a855f7; color: white; border-color: #c084fc; }
+.shop-grid { display: grid; grid-template-columns: 1fr; gap: 10px; max-height: 420px; overflow-y: auto; }
+.shop-item { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+.item-info h4 { color: #f8fafc; font-size: 9.5pt; }
+.item-info span { font-size: 7.5pt; color: #94a3b8; }
+.price { color: #ef4444; font-weight: bold; }
+.buy-btn { background: #a855f7; border: none; border-bottom: 3px solid #7e22ce; color: white; padding: 6px 12px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 8pt; }
+.buy-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; border:none !important; }
+
+.build-box { border: 2px solid #0ea5e9; grid-column: 1 / -1; }
+.inventory-preview { background: rgba(15, 23, 42, 0.4); border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 9pt; }
+.slot-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: rgba(30, 41, 59, 0.4); padding: 10px; border-radius: 6px; }
+.slot-name { font-weight: 600; font-size: 8pt; color: #38bdf8; width: 120px; }
+.slot-select { background: #0f172a; color: #e2e8f0; border: 1px solid #475569; padding: 8px; border-radius: 6px; width: calc(100% - 130px); font-size: 9pt; }
+.assemble-btn { width: 100%; background: #0ea5e9; border: none; border-bottom: 4px solid #0369a1; color: white; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; }
+.assemble-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; border:none; }
+.build-log { margin-top: 15px; max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; font-size: 8.5pt; color: #34d399; }
+
+.rig-blueprint-frame { background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); border: 3px dashed #334155; border-radius: 12px; padding: 25px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; min-height: 280px; align-items: center; }
+.visual-monitor-shell { background: #27272a; border: 10px solid #18181b; border-bottom-width: 18px; border-radius: 8px; height: 180px; display: flex; justify-content: center; align-items: center; }
+.monitor-screen-glare { width: 100%; height: 100%; background: #090d16; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #475569; font-size: 8.5pt; text-align: center; padding: 10px; }
+.visual-pc-tower { background: rgba(30, 41, 59, 0.4); border: 4px solid #3f3f46; border-right-width: 12px; border-radius: 6px; height: 220px; position: relative; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+.case-glow-indicator { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events: none; }
+.hardware-die-block { background: #1e293b; border: 1px solid #475569; border-radius: 4px; padding: 6px 10px; font-size: 8pt; color: #94a3b8; }
+
+/* ── Study Guide Page (Ver 1.5.0 Kepler) ── */
+.study-tab {
+    background: #1e293b; border: 1px solid #475569; color: #cbd5e1;
+    padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 8.5pt;
+    font-weight: 600; transition: all 0.15s;
+}
+.study-tab:hover { border-color: #38bdf8; color: #38bdf8; }
+.active-study-tab { background: #0ea5e9 !important; color: white !important; border-color: #38bdf8 !important; }
+
+.study-card {
+    background: rgba(30,41,59,0.7); border: 1px solid rgba(56,189,248,0.15);
+    border-radius: 10px; padding: 16px; transition: border-color 0.2s;
+}
+.study-card:hover { border-color: rgba(56,189,248,0.4); }
+.study-card-topic {
+    font-size: 7.5pt; font-weight: 900; color: #0ea5e9;
+    background: rgba(14,165,233,0.12); padding: 2px 8px;
+    border-radius: 10px; display: inline-block; margin-bottom: 10px;
+}
+.study-card-question { color: #f8fafc; font-size: 9.5pt; font-weight: 700; margin-bottom: 10px; line-height: 1.4; }
+.study-card-answer {
+    background: rgba(34,197,94,0.1); border-left: 3px solid #22c55e;
+    padding: 8px 12px; border-radius: 0 6px 6px 0; color: #4ade80;
+    font-size: 9pt; font-weight: 600;
+}
+.study-card-answer::before { content: "✅ "; }
+
+/* ── Community + Achievements (Ver 1.5.2a Tetonic) ── */
+#chat-messages::-webkit-scrollbar { width: 4px; }
+#chat-messages::-webkit-scrollbar-track { background: transparent; }
+#chat-messages::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCTycoon - Ver 1.17.1c Gebler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="PCTycoon - Build and manage your ultimate PC hardware empire. Buy parts, assemble rigs, benchmark systems and earn CAD. Free browser game.">
+    <meta name="keywords" content="PCTycoon, PC building game, hardware tycoon, PC simulator, browser game, build a PC, gaming PC, free game">
+    <meta name="author" content="ilikemacos">
+    <meta property="og:title" content="PCTycoon - Ver 1.17.1c Gebler">
+    <meta property="og:description" content="Build your PC hardware empire. Buy parts, assemble rigs and earn CAD!">
+    <meta property="og:url" content="https://ilikemacos.github.io/pctycoon/">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Supabase SDK (Ver 1.17.1c Gebler) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<!-- User Authentication Panel Overlay -->
+<div class="account-auth-panel" id="auth-box">
+    <div class="auth-header">
+        <div class="version-banner" style="background: linear-gradient(135deg, #eab308, #ca8a04); color: #0f172a; font-weight: 900;">VERSION 1.17.1c Gebler</div>
+        <h3> Create an Account or Log In</h3>
+        <p>Welcome to PCTycoon! Create a new account or log in to continue.</p>
+    </div>
+    
+    <div class="auth-inputs">
+        <input type="text" id="auth-username-input" placeholder="Enter Player Name..." maxlength="15">
+        <input type="password" id="auth-password-input" placeholder="Enter Password...">
+        <div class="auth-button-group">
+            <button class="auth-btn register" onclick="accountRegister()">Create Profile</button>
+            <button class="auth-btn login" onclick="accountLogin()">Login</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Main Workspace -->
+<div id="main-game-workspace" style="display: none;">
+    <!-- Global Dashboard HUD -->
+    <div class="status-bar" style="border-color: #eab308; box-shadow: 0 0 15px rgba(234, 179, 8, 0.15);">
+        <div class="status-metric">Operator: <span id="hud-user" style="color: #38bdf8;">None</span></div>
+        <div class="status-metric">Funds: <span id="hud-points" class="points-display" style="color: #eab308;">$0 CAD</span></div>
+        <div class="status-metric">Parts: <span id="hud-parts" style="color: #a855f7;">0 Pcs</span></div>
+        <div class="status-metric">Builds: <span id="hud-builds" style="color: #0ea5e9;">0 Built</span></div>
+        <div class="status-metric" style="font-size:9pt;"><span id="hud-level" style="color:#eab308;">Lv.1 Newcomer</span>
+            <div style="background:#1e293b; border-radius:4px; height:4px; width:100px; margin-top:3px; overflow:hidden;">
+                <div id="hud-xp-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#eab308,#f97316); transition:width 0.4s;"></div>
+            </div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+            <button onclick="triggerPrestige()" style="background:#7c3aed; color:white; border:none; padding:4px 10px; border-radius:6px; font-size:8pt; font-weight:bold; cursor:pointer;">Prestige</button>
+            <button class="auth-btn logout" onclick="accountLogout()" style="background:#ef4444; color:white; padding:4px 10px; font-size:8.5pt;">Logout</button>
+        </div>
+    </div>
+
+
+    <!-- PAGE NAVIGATION TABS -->
+    <div style="display:flex; gap:10px; max-width:1300px; margin: 0 auto 15px auto;">
+        <button onclick="switchPage('game')" id="page-tab-game" style="background:#eab308; color:#0f172a; border:none; padding:10px 28px; border-radius:8px; font-weight:900; font-size:10pt; cursor:pointer;"> Tycoon</button>
+        <button onclick="switchPage('study')" id="page-tab-study" style="background:#1e293b; color:#e2e8f0; border:2px solid #475569; padding:10px 28px; border-radius:8px; font-weight:900; font-size:10pt; cursor:pointer;"> Study Guide</button>
+        <button onclick="switchPage('community')" id="page-tab-community" style="background:#1e293b; color:#e2e8f0; border:2px solid #475569; padding:10px 28px; border-radius:8px; font-weight:900; font-size:10pt; cursor:pointer;"> Community</button>
+        <button onclick="switchPage('achievements')" id="page-tab-achievements" style="background:#1e293b; color:#e2e8f0; border:2px solid #475569; padding:10px 28px; border-radius:8px; font-weight:900; font-size:10pt; cursor:pointer;"> Achievements</button>
+    </div>
+
+    <!-- MZX ADMIN PANEL (ver 1.5 a2) -->
+    <div id="mzx-admin-panel" style="display:none; max-width:1300px; margin: 0 auto 20px auto;">
+        <div style="background: rgba(15,23,42,0.85); border: 2px solid #ef4444; border-radius: 12px; padding: 20px; box-shadow: 0 0 25px rgba(239,68,68,0.2);">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                <span style="background:linear-gradient(135deg,#ef4444,#b91c1c); color:white; font-weight:900; font-size:8pt; padding:3px 10px; border-radius:4px;"> ADMIN ACCESS — VER 1.17.1c Gebler</span>
+                <h3 style="color:#f87171; margin:0; font-size:12pt;"> Account Management Terminal</h3>
+            </div>
+            <div id="admin-accounts-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:12px;"></div>
+        </div>
+    </div>
+
+    <!-- GAME PAGE -->
+    <div id="page-game" style="display:block;">
+    <div class="container">
+        <header style="border-bottom: 2px solid #eab308;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h1>PCTycoon</h1>
+                    <p> <strong>Ver 1.17.1c Gebler Update:</strong> Real-time hardware analytics are online. Put your constructed machines through rigorous 3DMark and Cinebench synthetic sweeps to measure raw frame computation speeds, processor capacity, and unlock scale bonuses!</p>
+                </div>
+                <div class="version-badge-top" style="background: linear-gradient(135deg, #f59e0b, #eab308); color: #0f172a; font-weight: 900;">VER 1.17.1c Gebler</div>
+            </div>
+        </header>
+
+        <!-- INSTANT PRE-BUILT MARKET STOREFRONT -->
+        <div class="panel prebuilt-box" style="margin-bottom: 25px; border: 2px solid #eab308; background: rgba(234, 179, 8, 0.02);">
+            <h3 style="color: #eab308; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 13pt;">
+                <span></span> Instant Pre-Built Procurement Hub (Skip Assembly!)
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                <!-- Budget Buy -->
+                <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(234, 179, 8, 0.3); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <span class="category-tag budget" style="background: rgba(234, 179, 8, 0.2); color: #f59e0b; padding: 2px 6px; font-size: 7.5pt; font-weight: 900; border-radius: 4px;">BUDGET PRE-BUILT</span>
+                        <strong style="font-size: 11pt; color: #f8fafc; display: block; margin-top: 5px;">Ryzen 5 7600X + RTX 3060 Rig</strong>
+                        <p style="font-size: 8.5pt; color: #94a3b8; margin-top: 4px; line-height: 1.3;">Bypasses manual assembly. Triggers the entry-level target contract reward loop instantly.</p>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <div style="font-size: 11pt; color: #f43f5e; font-weight: bold; margin-bottom: 8px;">Price: $1,000 CAD</div>
+                        <button class="buy-btn" id="buy-prebuilt-budget" onclick="purchasePrebuilt('budget')" style="width: 100%; background: #eab308; border-color: #ca8a04; color: #0f172a;">Buy Pre-Built</button>
+                    </div>
+                </div>
+
+                <!-- Mid-Range Buy -->
+                <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <span class="category-tag mid" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; padding: 2px 6px; font-size: 7.5pt; font-weight: 900; border-radius: 4px;">MID-RANGE PRE-BUILT</span>
+                        <strong style="font-size: 11pt; color: #f8fafc; display: block; margin-top: 5px;">Ryzen 7 7800X3D + RX 7900 XT Rig</strong>
+                        <p style="font-size: 8.5pt; color: #94a3b8; margin-top: 4px; line-height: 1.3;">Instantly delivers the dominant vertical 3D cache architecture rig directly into your fulfillment pipeline.</p>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <div style="font-size: 11pt; color: #f43f5e; font-weight: bold; margin-bottom: 8px;">Price: $2,000 CAD</div>
+                        <button class="buy-btn" id="buy-prebuilt-mid" onclick="purchasePrebuilt('mid')" style="width: 100%; background: #0ea5e9; border-color: #0284c7;">Buy Pre-Built</button>
+                    </div>
+                </div>
+
+                <!-- Enthusiast Buy -->
+                <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(168, 85, 247, 0.3); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <span class="category-tag enthusiast" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; padding: 2px 6px; font-size: 7.5pt; font-weight: 900; border-radius: 4px;">ENTHUSIAST PRE-BUILT</span>
+                        <strong style="font-size: 11pt; color: #f8fafc; display: block; margin-top: 5px;">Ryzen 7 9850X3D + RTX 5080 Monster</strong>
+                        <p style="font-size: 8.5pt; color: #94a3b8; margin-top: 4px; line-height: 1.3;">Procure the ultimate absolute flagship configuration utilizing premium Blackwell graphics engines.</p>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <div style="font-size: 11pt; color: #f43f5e; font-weight: bold; margin-bottom: 8px;">Price: $4,500 CAD</div>
+                        <button class="buy-btn" id="buy-prebuilt-enthusiast" onclick="purchasePrebuilt('enthusiast')" style="width: 100%; background: #a855f7; border-color: #9333ea;">Buy Pre-Built</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-grid">
+            
+            <!-- HARDWARE QUIZ ACADEMY -->
+            <div class="panel duo-box" style="border-color: #22c55e;">
+                <h3 style="color: #4ade80; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <span></span> Hardware Quiz Academy (Earn +$500 CAD)
+                </h3>
+                <div class="progress-container">
+                    <div class="progress-bar" id="quiz-progress" style="width: 0%"></div>
+                </div>
+                <div id="quiz-body">
+                    <div class="question-text" id="q-text" style="font-weight: 600; font-size: 10.5pt; margin-bottom: 12px; color: #f1f5f9;">Loading question...</div>
+                    <div id="options-container"></div>
+                </div>
+                <div class="action-tray" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div id="quiz-feedback" style="font-weight: bold; font-size: 9.5pt;"></div>
+                    <button class="action-btn" id="quiz-action-btn" onclick="handleQuizAction()" disabled>Check Answer</button>
+                </div>
+            </div>
+
+            <!-- HARDWARE STOREFRONT -->
+            <div class="panel shop-box">
+                <h3 style="color: #c084fc; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <span></span> Multi-Category Hardware Store
+                </h3>
+                
+                <div class="shop-navigation">
+                    <div class="nav-tab active" id="tab-all" onclick="filterShop('all')">All Parts</div>
+                    <div class="nav-tab" id="tab-cpu" onclick="filterShop('cpu')">CPUs</div>
+                    <div class="nav-tab" id="tab-nvidia" onclick="filterShop('nvidia')">NVIDIA</div>
+                    <div class="nav-tab" id="tab-amd" onclick="filterShop('amd')">AMD</div>
+                    <div class="nav-tab" id="tab-ram" onclick="filterShop('ram')">RAM</div>
+                    <div class="nav-tab" id="tab-ssd" onclick="filterShop('ssd')">SSDs</div>
+                    <div class="nav-tab" id="tab-cooler" onclick="filterShop('cooler')">Coolers</div>
+                    <div class="nav-tab" id="tab-display" onclick="filterShop('display')">Displays</div>
+                </div>
+                
+                <div class="shop-grid" id="shop-container"></div>
+            </div>
+
+            <!-- MODULE D: SYSTEM RE-BENCHMARKING MATRIX (NEW IN VER 1.17.1c Gebler) -->
+            <div class="panel benchmark-box" style="border: 2px solid #eab308; grid-column: 1 / -1; background: rgba(234, 179, 8, 0.01);">
+                <h3 style="color: #eab308; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <span></span> Live Station Engine Benchmarking Lab & Stress Tester
+                </h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; align-items: start;">
+                    <!-- Engine Controls Column -->
+                    <div style="background: rgba(15, 23, 42, 0.7); padding: 15px; border-radius: 8px; border: 1px solid #475569;">
+                        <span style="font-size: 8.5pt; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 8px;">1. TEST METHOD ENGINE</span>
+                        <select id="bench-test-suite" style="background:#0f172a; color:#f8fafc; border:1px solid #475569; padding:8px; border-radius:6px; width:100%; font-size:9pt; margin-bottom:15px;">
+                            <option value="timespy"> 3DMark Time Spy Extreme Sweep (DirectX 12)</option>
+                            <option value="cinebench"> Cinebench 2026 Multithreaded Core Burner</option>
+                            <option value="cyberpunk"> Cyberpunk 2077 Ray Tracing Overdrive Framework</option>
+                        </select>
+
+                        <span style="font-size: 8.5pt; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 8px;">2. TARGET ENGINE SYSTEM</span>
+                        <button class="assemble-btn" id="bench-start-btn" onclick="executeBenchmarkSweep()" style="background: #eab308; color: #0f172a; border-color: #ca8a04;">Initialize Stress Sweep</button>
+                    </div>
+
+                    <!-- Output Engine Vector -->
+                    <div style="background: #090d16; border: 1px solid #334155; border-radius: 8px; padding: 15px; min-height: 145px;  display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 8.5pt; border-bottom: 1px solid #1e293b; padding-bottom: 6px; margin-bottom: 10px;">
+                                <span>INSTRUMENT DIAGNOSTIC STRATAL LOGS</span>
+                                <span id="bench-status-badge" style="color: #64748b;">[STANDBY]</span>
+                            </div>
+                            <!-- Bar Monitor Display Component -->
+                            <div class="progress-container" id="bench-progress-frame" style="display:none; margin-bottom:12px; background: #1e293b;">
+                                <div class="progress-bar" id="bench-progress-fill" style="width: 0%; background: #eab308;"></div>
+                            </div>
+                            <div id="bench-console-text" style="color: #cbd5e1; font-size: 9pt; line-height: 1.4;">
+                                > System engine matrix ready for stress sweep parameters... Configure variables or load inventory parts to index scoring charts.
+                            </div>
+                        </div>
+
+                        <!-- Leaderboard Score HUD Block -->
+                        <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #1e293b; display: flex; gap: 20px; flex-wrap: wrap;">
+                            <div style="background: rgba(30, 41, 59, 0.5); padding: 8px 12px; border-radius: 4px; border-left: 3px solid #38bdf8;">
+                                <div style="font-size: 7.5pt; color: #94a3b8;">GRAPHICS METRIC SCORE:</div>
+                                <div id="bench-score-gpu" style="font-size: 13pt; font-weight: bold; color: #38bdf8; ">--</div>
+                            </div>
+                            <div style="background: rgba(30, 41, 59, 0.5); padding: 8px 12px; border-radius: 4px; border-left: 3px solid #a855f7;">
+                                <div style="font-size: 7.5pt; color: #94a3b8;">COMPUTE CORE METRIC:</div>
+                                <div id="bench-score-cpu" style="font-size: 13pt; font-weight: bold; color: #a855f7; ">--</div>
+                            </div>
+                            <div style="background: rgba(34, 197, 94, 0.1); padding: 8px 12px; border-radius: 4px; border-left: 3px solid #22c55e;">
+                                <div style="font-size: 7.5pt; color: #4ade80;">GOLD MINE CONVERSION REVENUE:</div>
+                                <div id="bench-revenue-payout" style="font-size: 13pt; font-weight: bold; color: #22c55e; ">+$0 CAD</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASSEMBLY PLANT WORKSHOP -->
+            <div class="panel build-box">
+                <h2 style="color: #38bdf8; margin-top: 0; margin-bottom: 10px;"> Multi-Component Assembly Workshop & Live Diagnostic Monitor</h2>
+                
+                <div class="rig-blueprint-frame">
+                    <div class="visual-monitor-shell" id="vis-monitor-housing">
+                        <div class="monitor-screen-glare" id="vis-monitor-screen">
+                             NO DISPLAY SIGNAL<br>
+                            <span style="font-size:7pt; color:#64748b; margin-top:5px;">[Connect Station PC]</span>
+                        </div>
+                    </div>
+
+                    <div class="visual-pc-tower" id="vis-pc-housing">
+                        <div class="case-glow-indicator" id="vis-case-glow"></div>
+                        <div class="hardware-die-block" id="vis-node-cpu"> CPU Slot: EMPTY</div>
+                        <div class="hardware-die-block" id="vis-node-cooler"> Cooler Slot: EMPTY</div>
+                        <div class="hardware-die-block" id="vis-node-gpu"> GPU Slot: EMPTY</div>
+                        <div class="hardware-die-block" id="vis-node-ram"> RAM Slot: EMPTY</div>
+                        <div class="hardware-die-block" id="vis-node-ssd"> Storage: EMPTY</div>
+                    </div>
+                </div>
+
+                <div class="inventory-preview">
+                    <strong>Current On-Hand Components Matrix:</strong> <br>
+                    <span id="inventory-manifest-list" style="color: #94a3b8; font-style: italic; font-size: 9pt;">No items currently owned.</span>
+                </div>
+
+                <!-- Architectural Error Warning Banner Dynamic Messages -->
+                <div id="compatibility-alert-banner" style="display:none; background:rgba(239, 68, 68, 0.15); border: 2px solid #ef4444; color:#f87171; padding:12px; border-radius:8px; margin-bottom:15px; font-size:9.5pt; font-weight:bold;">
+                </div>
+
+                <!-- Selection Dropdowns -->
+                <div class="slot-row">
+                    <div class="slot-name"> CPU Unit</div>
+                    <select class="slot-select" id="slot-cpu" onchange="syncRigVisuals()"><option value="">-- Select Available Core Stock --</option></select>
+                </div>
+                <div class="slot-row">
+                    <div class="slot-name"> GPU Platform</div>
+                    <select class="slot-select" id="slot-gpu" onchange="syncRigVisuals()"><option value="">-- Select Available Core Stock --</option></select>
+                </div>
+                <div class="slot-row">
+                    <div class="slot-name"> RAM Array</div>
+                    <select class="slot-select" id="slot-ram" onchange="syncRigVisuals()"><option value="">-- Select Available Core Stock --</option></select>
+                </div>
+                <div class="slot-row">
+                    <div class="slot-name"> SSD Drive</div>
+                    <select class="slot-select" id="slot-ssd" onchange="syncRigVisuals()"><option value="">-- Select Available Core Stock --</option></select>
+                </div>
+                <div class="slot-row">
+                    <div class="slot-name"> Cooler Array</div>
+                    <select class="slot-select" id="slot-cooler" onchange="syncRigVisuals()"><option value="">-- Select Available Core Stock --</option></select>
+                </div>
+                <div class="slot-row">
+                    <div class="slot-name"> Display Unit</div>
+                    <select class="slot-select" id="slot-display" onchange="syncRigVisuals()"><option value="">-- Select Available Core Stock --</option></select>
+                </div>
+
+                <button class="assemble-btn" id="assemble-action-btn" onclick="triggerSystemAssembly()" disabled>Compile Full Station Assembly</button>
+                
+                <div class="build-log" id="workshop-log-output">
+                    > Systems Workshop array initialized. Select an inventory part for all active slots...
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div><!-- end page-game -->
+
+    <!-- STUDY GUIDE PAGE -->
+    <div id="page-study" style="display:none; max-width:1300px; margin:0 auto;">
+        <div style="background:rgba(15,23,42,0.85); border:2px solid #38bdf8; border-radius:12px; padding:25px; box-shadow:0 0 25px rgba(56,189,248,0.1);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+                <div>
+                    <h2 style="color:#38bdf8; margin-bottom:4px;"> Hardware Study Guide</h2>
+                    <p style="color:#94a3b8; font-size:9pt;">Master these topics to ace the Quiz Academy and earn more CAD! <span id="study-count" style="color:#eab308; font-weight:bold;"></span></p>
+                </div>
+                <input type="text" id="study-search" oninput="renderStudyCards(currentStudyTopic)" placeholder=" Search questions..." style="background:#0f172a; border:1px solid #475569; color:#f8fafc; padding:9px 14px; border-radius:8px; font-size:9pt; width:220px;">
+            </div>
+
+            <!-- Topic filter tabs -->
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;" id="study-topic-tabs">
+                <button onclick="filterStudy('all')" class="study-tab active-study-tab" data-topic="all">All Topics</button>
+                <button onclick="filterStudy('CPUs')" class="study-tab" data-topic="CPUs"> CPUs</button>
+                <button onclick="filterStudy('GPUs')" class="study-tab" data-topic="GPUs"> GPUs</button>
+                <button onclick="filterStudy('RAM')" class="study-tab" data-topic="RAM"> RAM</button>
+                <button onclick="filterStudy('Storage')" class="study-tab" data-topic="Storage"> Storage</button>
+                <button onclick="filterStudy('Displays')" class="study-tab" data-topic="Displays"> Displays</button>
+                <button onclick="filterStudy('Cooling')" class="study-tab" data-topic="Cooling"> Cooling</button>
+                <button onclick="filterStudy('General')" class="study-tab" data-topic="General"> General</button>
+            </div>
+
+            <!-- Study cards grid -->
+            <div id="study-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap:14px;"></div>
+        </div>
+    </div>
+
+    <!-- COMMUNITY PAGE -->
+    <div id="page-community" style="display:none; max-width:1300px; margin:0 auto;">
+        <div style="display:grid; grid-template-columns:1fr 320px; gap:20px;">
+
+            <!-- Global Chat -->
+            <div style="background:rgba(15,23,42,0.85); border:2px solid #22c55e; border-radius:12px; padding:20px;">
+                <h2 style="color:#22c55e; margin-bottom:5px;"> Global Chat</h2>
+                <p style="color:#94a3b8; font-size:8.5pt; margin-bottom:15px;">Chat with all online players in real time.</p>
+                <div id="chat-messages" style="height:340px; overflow-y:auto; background:rgba(0,0,0,0.3); border-radius:8px; padding:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px;">
+                    <div style="color:#475569; font-size:8.5pt; text-align:center;">Loading messages...</div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <input id="chat-input" type="text" maxlength="200" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatMessage()" style="flex:1; background:#0f172a; border:1px solid #475569; color:#f8fafc; padding:10px 12px; border-radius:6px; font-size:9.5pt;">
+                    <button onclick="sendChatMessage()" style="background:#22c55e; border:none; border-bottom:3px solid #16a34a; color:white; padding:10px 18px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:9pt;">Send</button>
+                </div>
+            </div>
+
+            <!-- Online Players + Build Ratings -->
+            <div style="display:flex; flex-direction:column; gap:16px;">
+
+                <!-- Online Players -->
+                <div style="background:rgba(15,23,42,0.85); border:2px solid #0ea5e9; border-radius:12px; padding:18px;">
+                    <h3 style="color:#38bdf8; margin-bottom:12px; font-size:11pt;"> Online Players</h3>
+                    <div id="online-players-list" style="display:flex; flex-direction:column; gap:8px; max-height:200px; overflow-y:auto;">
+                        <div style="color:#475569; font-size:8.5pt;">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Build Ratings -->
+                <div style="background:rgba(15,23,42,0.85); border:2px solid #a855f7; border-radius:12px; padding:18px;">
+                    <h3 style="color:#c084fc; margin-bottom:12px; font-size:11pt;"> Build Ratings</h3>
+                    <div id="build-ratings-list" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto;">
+                        <div style="color:#475569; font-size:8.5pt;">Loading...</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ACHIEVEMENTS PAGE -->
+    <div id="page-achievements" style="display:none; max-width:1300px; margin:0 auto;">
+        <div style="background:rgba(15,23,42,0.85); border:2px solid #eab308; border-radius:12px; padding:25px;">
+            <h2 style="color:#eab308; margin-bottom:5px;"> Achievements</h2>
+            <p style="color:#94a3b8; font-size:9pt; margin-bottom:20px;">Complete milestones to unlock achievements!</p>
+            <div id="achievements-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:14px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
